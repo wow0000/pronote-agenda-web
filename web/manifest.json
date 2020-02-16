@@ -1,0 +1,43 @@
+{
+  "short_name": "Pronote",
+  "name": "Pronote Calendar",
+  "prefer_related_applications": false,
+
+  "icons": [
+    {
+      "src": "/icons/res/mipmap-mdpi/pronote_calendar.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/icons/res/mipmap-hdpi/pronote_calendar.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/icons/res/mipmap-xhdpi/pronote_calendar.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/icons/res/mipmap-xxhdpi/pronote_calendar.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/icons/res/mipmap-xxxhdpi/pronote_calendar.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/web_hi_res_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#2ecc71",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3367D6"
+}

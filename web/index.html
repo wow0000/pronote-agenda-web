@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<script>
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/sw.js', {scope: "/"}).then(function (reg) {
+				// registration worked
+				console.log('Registration succeeded. Scope is ' + reg.scope);
+			}).catch(function (error) {
+				// registration failed
+				console.log('Registration failed with ' + error);
+			});
+		}
+
+	</script>
+	<meta charset="UTF-8">
+	<meta name="theme-color" content="#2ecc71"/>
+	<title>Pronote Agenda</title>
+	<link href="manifest.json" rel="manifest">
+	<link rel="apple-touch-icon" href="/icons/res/mipmap-xxxhdpi/pronote_calendar.png">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link crossorigin="anonymous"
+		  href="css/datepicker.min.css"
+		  integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark">
+	<a class="navbar-brand" href="#">Pronote Agenda</a>
+	<button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+			data-target="#navbarText" data-toggle="collapse" type="button">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarText">
+		<ul class="navbar-nav mr-auto">
+			<a class="nav-link" href="#">Paramètres</a>
+		</ul>
+	</div>
+</nav>
+
+<br>
+<!-- Main page -->
+<div class="container" id="div-main">
+	<div class="input-group date" id="date-picker">
+		<input aria-describedby="basic-addon1" aria-label="Date" class="form-control" id="main-date" placeholder="Date"
+			   type="text">
+		<div class="input-group-append">
+			<span class="input-group-text" id="basic-addon1"></span>
+		</div>
+	</div>
+
+	<br>
+	<div class="table-wrapper-scroll-y my-custom-scrollbar">
+		<table class="table table-bordered table-dark mb-0" id="TimeTable">
+			<thead>
+			<tr>
+				<th>
+					Heure
+				</th>
+				<th>
+					Cours
+				</th>
+				<th>
+					Salle
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- Login page -->
+<div class="container" hidden id="div-login">
+	<div class="alert alert-danger" hidden id="login-info" role="alert">
+		...
+	</div>
+	<div class="form-group">
+		<label for="username">Nom d'utilisateur</label>
+		<input aria-describedby="usernameHelp" class="form-control" id="username" placeholder="Prénom.nom"
+			   type="text">
+	</div>
+	<div class="form-group">
+		<label for="password">Mot de passe</label>
+		<input class="form-control" id="password" placeholder="*******" type="password">
+		<small class="form-text text-muted">Votre mot de passe sera sauvegardé sur votre appareil.</small>
+	</div>
+
+	<div class="form-group">
+		<label for="academie">Académie</label>
+		<select class="form-control" id="academie">
+			<option selected>ac-besancon</option>
+			<option>ac-caen</option>
+			<option>ac-clermont</option>
+			<option>ac-grenoble</option>
+			<option>ac-lyon</option>
+			<option>ac-montpellier</option>
+			<option>ac-nancy-metz</option>
+			<option>ac-orleans-tours</option>
+			<option>ac-reims</option>
+			<option>ac-rouen</option>
+			<option>ac-strasbourg</option>
+			<option>ac-toulouse</option>
+			<option>iledefrance</option>
+			<option>toutatice</option>
+			<option>none</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label for="pronoteurl">URL Pronote</label>
+		<input aria-describedby="pronoteurlHelp" class="form-control" id="pronoteurl"
+			   placeholder="http://0xxxxx.index-education.net/pronote/"
+			   type="text">
+		<small class="form-text text-muted">URL Pronote avec un / à la fin (sans eleve.html)</small>
+	</div>
+
+	<button class="btn btn-primary" id="login-button" onclick="try_login();" type="submit">Enregistrer</button>
+	<br><br>
+	<div class="spinner-border text-primary" hidden id="login-spinner" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+
+</div>
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8="
+		src="js/datepicker.min.js"></script>
+<script src="js/index.js" type="text/javascript"></script>
+</body>
+</html>
