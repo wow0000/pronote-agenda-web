@@ -41,9 +41,65 @@ window["ServerURLInput"].onchange = function () {
 //Auto pronote completion URL
 if (getUrlVars()["pronoteurl"] !== undefined) {
 	console.log("Applying PronoteURL");
-	document.getElementById("pronoteurl").value = getUrlVars()["pronoteurl"];
+	document.getElementById("pronoteurl").value = getUrlVars()["pronoteurl"].replace("#", "");
 }
 
+
+function resetSW() {
+	"use strict";
+	navigator.serviceWorker.getRegistrations().then(function (registrations) {
+		for (let registration of registrations) {
+			registration.unregister()
+		}
+	})
+	location.reload();
+}
+
+function refreshData() {
+	let info = document.getElementById("settings-info");
+	document.getElementById("settings-update-spinner").hidden = false;
+	let sendData = {
+		type: "fetch",
+		username: localStorage.getItem("username"),
+		password: localStorage.getItem("password"),
+		url: localStorage.getItem("pronoteurl"),
+		cas: localStorage.getItem("academie")
+	};
+	sendData = JSON.stringify(sendData);
+	fetch(settings.server, {
+		method: "POST", body: sendData, mode: "cors", headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		}
+	}).then(function (response) {
+		const contentType = response.headers.get("content-type");
+		if (contentType && contentType.indexOf("application/json") !== -1) {
+			return response.json().then(function (json) {
+				console.log(json);
+				if (json.name !== undefined) {
+					info.hidden = true;
+					localStorage.setItem("data", JSON.stringify(json));
+					redirect();
+				} else {
+					document.getElementById("settings-update-spinner").hidden = true;
+					info.innerText = "Mauvais identifiants.";
+					info.hidden = false;
+				}
+			});
+		} else {
+			document.getElementById("settings-update-spinner").hidden = true;
+			info.innerText = "Erreur de réponse au serveur d'authentification.";
+			info.hidden = false;
+			console.log(contentType);
+			console.error("NO JSON FOUND WALLAH");
+		}
+	}).catch(function (err) {
+		console.error("Erreur:", err);
+		info.innerText = "Erreur de connexion au serveur d'authentification, vérifiez votre connexion internet.";
+		info.hidden = false;
+		document.getElementById("settings-update-spinner").hidden = true;
+	});
+}
 
 /**
  * @return {object} arguments
@@ -253,6 +309,7 @@ function redirect() {
 		pushCourses(new Date().toLocaleDateString('en-EN'), JSON.parse(localStorage.getItem("data")));
 		document.getElementById("main-date").value = new Date().toLocaleDateString("en-EN");
 		is_logged_in = true;
+		document.getElementById("settings-logged").hidden = !is_logged_in;
 	}
 }
 

@@ -143,6 +143,24 @@
 		</div>
 		<br>
 	</div>
+	<div class="alert alert-danger" hidden id="settings-info" role="alert">
+		...
+	</div>
+	<div class="container bg-white shadow" hidden id="settings-logged">
+		<p>Mettre à jour votre emplois du temps et données Pronote</p>
+		<button type="button" class="btn btn-primary" onclick="refreshData();">Refresh pronote data</button>
+		<div hidden id="settings-update-spinner">
+			<div class="spinner-border text-primary" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+		</div>
+		<p>Supprimer les données en rapport avec votre compte Pronote (Reset de l'application)</p>
+		<button type="button" class="btn btn-danger" onclick="localStorage.clear(); location.reload();">Reset
+			localStorage
+		</button>
+		<p>Supprimer le cache local (Mise à jour de l'application)</p>
+		<button type="button" class="btn btn-danger" onclick="resetSW();">Reset Service Worker</button>
+	</div>
 </div>
 
 <script src="js/jquery-3.4.1.min.js"></script>
