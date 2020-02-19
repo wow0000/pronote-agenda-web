@@ -9,12 +9,14 @@ if (localStorage.getItem("settings") !== null) {
 } else {
 	settings = {
 		color: true,
+		nativeDate: true,
 		server: location.origin + location.pathname + "api/",
 	};
 	localStorage.setItem("settings", JSON.stringify(settings));
 }
 //Apply settings.
-document.getElementById("colorCheck").value = settings.color;
+document.getElementById("colorCheck").checked = settings.color;
+document.getElementById("native-Check").checked = !settings.nativeDate;
 document.getElementById("ServerURLInput").value = settings.server;
 
 document.getElementById("main-date").onchange = function () {
@@ -23,6 +25,11 @@ document.getElementById("main-date").onchange = function () {
 
 document.getElementById("colorCheck").onchange = function () {
 	settings.color = window["colorCheck"].checked;
+	localStorage.setItem("settings", JSON.stringify(settings));
+}
+
+document.getElementById("native-Check").onchange = function () {
+	settings.nativeDate = !window["native-Check"].checked;
 	localStorage.setItem("settings", JSON.stringify(settings));
 }
 
@@ -285,9 +292,13 @@ function try_login() {
 
 }
 
-$('#date-picker').datepicker({
-	todayBtn: true,
-	language: "fr"
+//2/19/2020
+flatpickr("#main-date", {
+	dateFormat: "m/d/Y",
+	altInput: true,
+	altFormat: "d/m/Y",
+	disableMobile: settings.nativeDate.toString(),
+	defaultDate: new Date(new Date().setHours(0, 0, 0, 0)),
 });
 
 //init
@@ -300,8 +311,8 @@ function redirect() {
 	} else {
 		//Load data;
 		UI_login(true);
-		pushCourses(new Date().toLocaleDateString('en-EN'), JSON.parse(localStorage.getItem("data")));
-		document.getElementById("main-date").value = new Date().toLocaleDateString("en-EN");
+		pushCourses(new Date(new Date().setHours(0, 0, 0, 0)), JSON.parse(localStorage.getItem("data")));
+		document.getElementById("main-date").value = new Date(new Date().setHours(0, 0, 0, 0));
 		is_logged_in = true;
 		document.getElementById("settings-logged").hidden = !is_logged_in;
 	}
