@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 let settings;
 let table = document.querySelector("#TimeTable tbody");
 let is_logged_in = false;
@@ -13,29 +14,21 @@ if (localStorage.getItem("settings") !== null) {
 	localStorage.setItem("settings", JSON.stringify(settings));
 }
 //Apply settings.
-window["colorCheck"].value = settings.color;
-window["ServerURLInput"].value = settings.server;
+document.getElementById("colorCheck").value = settings.color;
+document.getElementById("ServerURLInput").value = settings.server;
 
-
-// PWA Install
-window.addEventListener('beforeinstallprompt', (e) => {
-	// Prevent Chrome 67 and earlier from automatically showing the prompt
-	//e.prompt();
-});
-
-window["main-date"].onchange = function () {
+document.getElementById("main-date").onchange = function () {
 	pushCourses(window["main-date"].value, JSON.parse(localStorage.getItem("data")))
-
 }
-window["colorCheck"].onchange = function () {
+
+document.getElementById("colorCheck").onchange = function () {
 	settings.color = window["colorCheck"].checked;
 	localStorage.setItem("settings", JSON.stringify(settings));
-
 }
-window["ServerURLInput"].onchange = function () {
+
+document.getElementById("ServerURLInput").onchange = function () {
 	settings.server = window["ServerURLInput"].value;
 	localStorage.setItem("settings", JSON.stringify(settings));
-
 }
 
 //Auto pronote completion URL
@@ -46,7 +39,7 @@ if (getUrlVars()["pronoteurl"] !== undefined) {
 
 
 function resetSW() {
-	"use strict";
+	'use strict';
 	navigator.serviceWorker.getRegistrations().then(function (registrations) {
 		for (let registration of registrations) {
 			registration.unregister()
@@ -57,6 +50,15 @@ function resetSW() {
 
 function refreshData() {
 	let info = document.getElementById("settings-info");
+
+	function refreshError(msg, err) {
+		console.error("Erreur:", err);
+		info.innerText = msg;
+		info.hidden = false;
+		document.getElementById("settings-update-spinner").hidden = true;
+
+	}
+
 	document.getElementById("settings-update-spinner").hidden = false;
 	let sendData = {
 		type: "fetch",
@@ -81,25 +83,17 @@ function refreshData() {
 					localStorage.setItem("data", JSON.stringify(json));
 					redirect();
 				} else {
-					document.getElementById("settings-update-spinner").hidden = true;
-					info.innerText = "Mauvais identifiants.";
-					info.hidden = false;
+					refreshError("Mauvais identifiants.", "bad login");
 				}
 			});
 		} else {
-			document.getElementById("settings-update-spinner").hidden = true;
-			info.innerText = "Erreur de réponse au serveur d'authentification.";
-			info.hidden = false;
-			console.log(contentType);
-			console.error("NO JSON FOUND WALLAH");
+			refreshError("Erreur de connexion au serveur d'authentification.", contentType);
 		}
 	}).catch(function (err) {
-		console.error("Erreur:", err);
-		info.innerText = "Erreur de connexion au serveur d'authentification, vérifiez votre connexion internet.";
-		info.hidden = false;
-		document.getElementById("settings-update-spinner").hidden = true;
+		refreshError("Erreur de connexion au serveur d'authentification, vérifiez votre connexion internet.", err);
 	});
 }
+
 
 /**
  * @return {object} arguments
