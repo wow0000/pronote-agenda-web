@@ -9,7 +9,7 @@ if (localStorage.getItem("settings") !== null) {
 } else {
 	settings = {
 		color: true,
-		nativeDate: true,
+		nativeDate: false, //This setting is reversed.
 		server: location.origin + location.pathname + "api/",
 	};
 	localStorage.setItem("settings", JSON.stringify(settings));
