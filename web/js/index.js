@@ -88,6 +88,8 @@ function refreshData() {
 				if (json.name !== undefined) {
 					info.hidden = true;
 					localStorage.setItem("data", JSON.stringify(json));
+					localStorage.setItem("updateTime", new Date().toJSON())
+					document.getElementById("settings-update-spinner").hidden = true;
 					redirect();
 				} else {
 					refreshError("Mauvais identifiants.", "bad login");
@@ -268,6 +270,8 @@ function try_login() {
 					localStorage.setItem("academie", academie);
 					localStorage.setItem("pronoteurl", pronoteurl);
 
+					localStorage.setItem("updateTime", new Date().toJSON())
+
 					localStorage.setItem("data", JSON.stringify(json));
 					redirect();
 				} else {
@@ -307,14 +311,14 @@ function redirect() {
 	if (localStorage.getItem("username") === null) {
 		//Need to show Login page
 		UI_login(false);
-		is_logged_in = false;
 	} else {
 		//Load data;
 		UI_login(true);
 		pushCourses(new Date(new Date().setHours(0, 0, 0, 0)), JSON.parse(localStorage.getItem("data")));
 		document.getElementById("main-date").value = new Date(new Date().setHours(0, 0, 0, 0));
-		is_logged_in = true;
-		document.getElementById("settings-logged").hidden = !is_logged_in;
+		document.getElementById("settings-logged").hidden = false;
+		//Show outdated popup if data isn't updated for more than 5 days
+		document.getElementById("main-outdated").hidden = !Boolean(new Date(localStorage.getItem("updateTime")) < new Date().fp_incr("-5d"));
 	}
 }
 

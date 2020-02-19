@@ -37,6 +37,12 @@
 <br>
 <!-- Main page -->
 <div class="container" id="div-main">
+
+	<div class="alert alert-danger" hidden id="main-outdated" role="alert">
+		Vos données pronote ne sont pas à jour.
+		<a class="nav-link" href="#" onclick="UI_wrap('div-settings');">Paramètres</a>
+	</div>
+
 	<div class="input-group date" id="date-picker">
 		<input class="form-control flatpickr flatpickr-input" id="main-date" placeholder="Date" readonly type="text">
 	</div>
