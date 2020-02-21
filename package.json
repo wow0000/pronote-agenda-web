@@ -11,5 +11,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "pronote-lib": "^1.0.1"
-  }
+  },
+  "devDependencies": {}
 }

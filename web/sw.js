@@ -1,16 +1,14 @@
 self.addEventListener('install', function (event) {
 	event.waitUntil(
-		caches.open('v1').then(function (cache) {
+		caches.open('v2').then(function (cache) {
 			return cache.addAll([
 				'/',
 				'/index.html',
 				'/manifest.json',
-				'/js/bootstrap.min.js',
 				'/js/index.js',
-				'/js/jquery-3.4.1.min.js',
-				'/js/datepicker.min.js',
+				'/js/flatpickr.js',
 				"/css/bootstrap.min.css",
-				"/css/datepicker.min.css"
+				"/css/flatpickr.min.css"
 			]);
 		})
 	);
@@ -29,7 +27,7 @@ self.addEventListener('fetch', function (event) {
 				// and serve second one
 				let responseClone = response.clone();
 
-				caches.open('v1').then(function (cache) {
+				caches.open('v2').then(function (cache) {
 					cache.put(event.request, responseClone);
 				});
 				return response;

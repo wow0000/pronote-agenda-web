@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 let settings;
 let table = document.querySelector("#TimeTable tbody");
 let is_logged_in = false;
@@ -8,34 +9,33 @@ if (localStorage.getItem("settings") !== null) {
 } else {
 	settings = {
 		color: true,
+		nativeDate: false, //This setting is reversed.
 		server: location.origin + location.pathname + "api/",
 	};
 	localStorage.setItem("settings", JSON.stringify(settings));
 }
 //Apply settings.
-window["colorCheck"].value = settings.color;
-window["ServerURLInput"].value = settings.server;
+document.getElementById("colorCheck").checked = settings.color;
+document.getElementById("native-Check").checked = !settings.nativeDate;
+document.getElementById("ServerURLInput").value = settings.server;
 
-
-// PWA Install
-window.addEventListener('beforeinstallprompt', (e) => {
-	// Prevent Chrome 67 and earlier from automatically showing the prompt
-	//e.prompt();
-});
-
-window["main-date"].onchange = function () {
+document.getElementById("main-date").onchange = function () {
 	pushCourses(window["main-date"].value, JSON.parse(localStorage.getItem("data")))
-
 }
-window["colorCheck"].onchange = function () {
+
+document.getElementById("colorCheck").onchange = function () {
 	settings.color = window["colorCheck"].checked;
 	localStorage.setItem("settings", JSON.stringify(settings));
-
 }
-window["ServerURLInput"].onchange = function () {
+
+document.getElementById("native-Check").onchange = function () {
+	settings.nativeDate = !window["native-Check"].checked;
+	localStorage.setItem("settings", JSON.stringify(settings));
+}
+
+document.getElementById("ServerURLInput").onchange = function () {
 	settings.server = window["ServerURLInput"].value;
 	localStorage.setItem("settings", JSON.stringify(settings));
-
 }
 
 //Auto pronote completion URL
@@ -46,7 +46,7 @@ if (getUrlVars()["pronoteurl"] !== undefined) {
 
 
 function resetSW() {
-	"use strict";
+	'use strict';
 	navigator.serviceWorker.getRegistrations().then(function (registrations) {
 		for (let registration of registrations) {
 			registration.unregister().then(function (err) {
@@ -59,6 +59,15 @@ function resetSW() {
 
 function refreshData() {
 	let info = document.getElementById("settings-info");
+
+	function refreshError(msg, err) {
+		console.error("Erreur:", err);
+		info.innerText = msg;
+		info.hidden = false;
+		document.getElementById("settings-update-spinner").hidden = true;
+
+	}
+
 	document.getElementById("settings-update-spinner").hidden = false;
 	let sendData = {
 		type: "fetch",
@@ -81,27 +90,21 @@ function refreshData() {
 				if (json.name !== undefined) {
 					info.hidden = true;
 					localStorage.setItem("data", JSON.stringify(json));
+					localStorage.setItem("updateTime", new Date().toJSON())
+					document.getElementById("settings-update-spinner").hidden = true;
 					redirect();
 				} else {
-					document.getElementById("settings-update-spinner").hidden = true;
-					info.innerText = "Mauvais identifiants.";
-					info.hidden = false;
+					refreshError("Mauvais identifiants.", "bad login");
 				}
 			});
 		} else {
-			document.getElementById("settings-update-spinner").hidden = true;
-			info.innerText = "Erreur de réponse au serveur d'authentification.";
-			info.hidden = false;
-			console.log(contentType);
-			console.error("NO JSON FOUND WALLAH");
+			refreshError("Erreur de connexion au serveur d'authentification.", contentType);
 		}
 	}).catch(function (err) {
-		console.error("Erreur:", err);
-		info.innerText = "Erreur de connexion au serveur d'authentification, vérifiez votre connexion internet.";
-		info.hidden = false;
-		document.getElementById("settings-update-spinner").hidden = true;
+		refreshError("Erreur de connexion au serveur d'authentification, vérifiez votre connexion internet.", err);
 	});
 }
+
 
 /**
  * @return {object} arguments
@@ -269,6 +272,8 @@ function try_login() {
 					localStorage.setItem("academie", academie);
 					localStorage.setItem("pronoteurl", pronoteurl);
 
+					localStorage.setItem("updateTime", new Date().toJSON())
+
 					localStorage.setItem("data", JSON.stringify(json));
 					redirect();
 				} else {
@@ -293,9 +298,13 @@ function try_login() {
 
 }
 
-$('#date-picker').datepicker({
-	todayBtn: true,
-	language: "fr"
+//2/19/2020
+flatpickr("#main-date", {
+	dateFormat: "m/d/Y",
+	altInput: true,
+	altFormat: "d/m/Y",
+	disableMobile: settings.nativeDate.toString(),
+	defaultDate: new Date(new Date().setHours(0, 0, 0, 0)),
 });
 
 //init
@@ -304,14 +313,14 @@ function redirect() {
 	if (localStorage.getItem("username") === null) {
 		//Need to show Login page
 		UI_login(false);
-		is_logged_in = false;
 	} else {
 		//Load data;
 		UI_login(true);
-		pushCourses(new Date().toLocaleDateString('en-EN'), JSON.parse(localStorage.getItem("data")));
-		document.getElementById("main-date").value = new Date().toLocaleDateString("en-EN");
-		is_logged_in = true;
-		document.getElementById("settings-logged").hidden = !is_logged_in;
+		pushCourses(new Date(new Date().setHours(0, 0, 0, 0)), JSON.parse(localStorage.getItem("data")));
+		document.getElementById("main-date").value = new Date(new Date().setHours(0, 0, 0, 0));
+		document.getElementById("settings-logged").hidden = false;
+		//Show outdated popup if data isn't updated for more than 5 days
+		document.getElementById("main-outdated").hidden = !Boolean(new Date(localStorage.getItem("updateTime")) < new Date().fp_incr("-5d"));
 	}
 }
 

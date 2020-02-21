@@ -13,42 +13,38 @@
 		}
 
 	</script>
+
 	<meta charset="UTF-8">
-	<meta content="#2ecc71" name="theme-color"/>
 	<title>Pronote Agenda</title>
-	<link href="manifest.json" rel="manifest">
-	<link href="/icons/res/mipmap-xxxhdpi/pronote_calendar.png" rel="apple-touch-icon">
 	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+	<meta content="#2ecc71" name="theme-color"/>
+	<link href="manifest.json" rel="manifest">
+	<link href="icons/res/mipmap-xxxhdpi/pronote_calendar.png" rel="apple-touch-icon">
+
 	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<link crossorigin="anonymous"
-	      href="css/datepicker.min.css"
-	      integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" rel="stylesheet"/>
+	<link crossorigin="anonymous" href="css/flatpickr.min.css" rel="stylesheet"/>
 </head>
 <body>
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-dark">
 	<a class="navbar-brand" href="#" onclick="redirect();">Pronote Agenda</a>
-	<button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
-	        data-target="#navbarText" data-toggle="collapse" type="button">
-		<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="navbarText">
-		<ul class="navbar-nav mr-auto">
-			<a class="nav-link" href="#" onclick="UI_wrap('div-settings');">Paramètres</a>
-		</ul>
-	</div>
+	<ul class="navbar-nav mr-auto">
+		<a class="nav-link" href="#" onclick="UI_wrap('div-settings');">Paramètres</a>
+	</ul>
 </nav>
 
 <br>
 <!-- Main page -->
 <div class="container" id="div-main">
+
+	<div class="alert alert-danger" hidden id="main-outdated" role="alert">
+		Vos données pronote ne sont pas à jour.
+		<a class="nav-link" href="#" onclick="UI_wrap('div-settings');">Paramètres</a>
+	</div>
+
 	<div class="input-group date" id="date-picker">
-		<input aria-describedby="basic-addon1" readonly aria-label="Date" class="form-control" id="main-date"
-		       placeholder="Date"
-		       type="text">
-		<div class="input-group-append">
-			<span class="input-group-text" id="basic-addon1"></span>
-		</div>
+		<input class="form-control flatpickr flatpickr-input" id="main-date" placeholder="Date" readonly type="text">
 	</div>
 
 	<br>
@@ -80,8 +76,8 @@
 	<div class="form-group">
 		<label for="username">Nom d'utilisateur</label>
 		<input aria-describedby="usernameHelp" autocapitalize="off" autocomplete="off" autocorrect="off"
-		       class="form-control" id="username" placeholder="Prénom.nom" spellcheck="false"
-		       type="text">
+			   class="form-control" id="username" placeholder="Prénom.nom" spellcheck="false"
+			   type="text">
 	</div>
 	<div class="form-group">
 		<label for="password">Mot de passe</label>
@@ -113,9 +109,9 @@
 	<div class="form-group">
 		<label for="pronoteurl">URL Pronote</label>
 		<input aria-describedby="pronoteurlHelp" autocapitalize="off" autocomplete="off" autocorrect="off"
-		       class="form-control" id="pronoteurl" placeholder="http://0xxxxx.index-education.net/pronote/"
-		       spellcheck="false"
-		       type="text">
+			   class="form-control" id="pronoteurl" placeholder="http://0xxxxx.index-education.net/pronote/"
+			   spellcheck="false"
+			   type="text">
 		<small class="form-text text-muted">URL Pronote avec un / à la fin (sans eleve.html)</small>
 	</div>
 
@@ -137,6 +133,13 @@
 			</label>
 		</div>
 		<br>
+		<div class="form-check">
+			<input checked class="form-check-input" id="native-Check" type="checkbox" value="">
+			<label class="form-check-label" for="native-Check">
+				Activer la date native
+			</label>
+		</div>
+		<br>
 		<div class="form-group">
 			<label for="ServerURLInput">Serveur pronote</label>
 			<input class="form-control" id="ServerURLInput" type="text" value="https://pronote.wowow.cloud/api/">
@@ -148,25 +151,29 @@
 	</div>
 	<div class="container bg-white shadow" hidden id="settings-logged">
 		<p>Mettre à jour votre emplois du temps et données Pronote</p>
-		<button type="button" class="btn btn-primary" onclick="refreshData();">Refresh pronote data</button>
+		<button class="btn btn-primary" onclick="refreshData();" type="button">Refresh pronote data</button>
 		<div hidden id="settings-update-spinner">
 			<div class="spinner-border text-primary" role="status">
 				<span class="sr-only">Loading...</span>
 			</div>
 		</div>
 		<p>Supprimer les données en rapport avec votre compte Pronote (Reset de l'application)</p>
-		<button type="button" class="btn btn-danger" onclick="localStorage.clear(); location.reload();">Reset
+		<button class="btn btn-danger" onclick="localStorage.clear(); location.reload();" type="button">Reset
 			localStorage
 		</button>
 		<p>Supprimer le cache local (Mise à jour de l'application)</p>
-		<button type="button" class="btn btn-danger" onclick="resetSW();">Reset Service Worker</button>
+		<button class="btn btn-danger" onclick="resetSW();" type="button">Reset Service Worker</button>
+		<p>Supprimer uniquement les paramètres de l'application</p>
+		<button class="btn btn-danger" onclick="localStorage.removeItem('settings'); location.reload();" type="button">
+			Reset
+			localStorage/settings
+		</button>
 	</div>
 </div>
 
-<script src="js/jquery-3.4.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8="
-        src="js/datepicker.min.js"></script>
+<!--script src="js/jquery-3.4.1.min.js"></script-->
+<!--script src="js/bootstrap.min.js"></script-->
+<script src="js/flatpickr.js"></script>
 <script src="js/index.js" type="text/javascript"></script>
 </body>
 </html>
