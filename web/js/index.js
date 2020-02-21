@@ -49,7 +49,9 @@ function resetSW() {
 	"use strict";
 	navigator.serviceWorker.getRegistrations().then(function (registrations) {
 		for (let registration of registrations) {
-			registration.unregister()
+			registration.unregister().then(function (err) {
+				console.log("Service worker: ", err);
+			});
 		}
 	})
 	location.reload();
