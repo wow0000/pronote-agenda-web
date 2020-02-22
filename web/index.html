@@ -68,6 +68,7 @@
 		</table>
 	</div>
 </div>
+
 <!-- Login page -->
 <div class="container" hidden id="div-login">
 	<div class="alert alert-danger" hidden id="login-info" role="alert">
@@ -107,7 +108,9 @@
 	</div>
 
 	<div class="form-group">
-		<label for="pronoteurl">URL Pronote</label>
+		<label for="pronoteurl">URL Pronote
+		<button class="btn btn-success" id="geo_localisation" onclick="refreshGeo();" hidden> Loc</button></label>
+
 		<input aria-describedby="pronoteurlHelp" autocapitalize="off" autocomplete="off" autocorrect="off"
 			   class="form-control" id="pronoteurl" placeholder="http://0xxxxx.index-education.net/pronote/"
 			   spellcheck="false"

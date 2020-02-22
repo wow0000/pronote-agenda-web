@@ -45,6 +45,55 @@ if (getUrlVars()["pronoteurl"] !== undefined) {
 }
 
 
+//Geo localisation part
+if ("geolocation" in navigator) {
+	document.getElementById("geo_localisation").hidden = false;
+	window["refreshGeo"] = function () {
+		let pronote_url = document.getElementById("pronoteurl"); //Clean way
+		pronote_url.hidden = true;
+
+		navigator.geolocation.getCurrentPosition(function (position) {
+			let info = document.getElementById("login-info");
+
+			let sendData = {
+				lat: position.coords.latitude,
+				long: position.coords.longitude
+			};
+
+			sendData = JSON.stringify(sendData);
+
+			fetch(settings.server + "geo", {
+				method: "POST", body: sendData, mode: "cors", headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}).then(function (response) {
+				const contentType = response.headers.get("content-type");
+				if (contentType && contentType.indexOf("application/json") !== -1) {
+					return response.json().then(function (json) {
+						let parsed_json = JSON.parse(json);
+						pronote_url.outerHTML = '<select class="form-control" id="pronoteurl"></select>'
+						let pronote_select = document.getElementById("pronoteurl");
+						parsed_json.forEach(function(e){
+							let opt = document.createElement("option");
+							opt.value = e.url;
+							opt.text = e.nomEtab;
+							pronote_select.add(opt);
+						})
+					});
+				} else {
+					info.hidden = false;
+					info.innerText = "Erreur de la part du serveur";
+				}
+			}).catch(function (err) {
+				info.hidden = false;
+				info.innerText = "Erreur de connexion au serveur, vérifiez votre connexion internet";
+				console.log(err);
+			});
+		});
+	}
+}
+
 function resetSW() {
 	'use strict';
 	navigator.serviceWorker.getRegistrations().then(function (registrations) {
@@ -246,6 +295,10 @@ function try_login() {
 	let academie = document.getElementById("academie").selectedOptions[0].innerText;
 	let pronoteurl = document.getElementById("pronoteurl").value;
 
+	if (pronoteurl[pronoteurl.length-1] !== "/"){
+		pronoteurl += "/";
+	}
+
 	UI_spinner(true);
 
 	let sendData = {
@@ -255,7 +308,10 @@ function try_login() {
 		url: pronoteurl,
 		cas: academie
 	};
+
+
 	sendData = JSON.stringify(sendData);
+	console.log(sendData);
 	fetch(settings.server, {
 		method: "POST", body: sendData, mode: "cors", headers: {
 			'Accept': 'application/json',
