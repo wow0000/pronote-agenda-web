@@ -26,12 +26,38 @@
 	<link crossorigin="anonymous" href="css/flatpickr.min.css" rel="stylesheet"/>
 </head>
 <body>
+
+<style>
+	ul.nav {
+		white-space: nowrap;
+		overflow-x: auto;
+	}
+
+	ul.nav li {
+		display: inline-block;
+		float: none;
+	}
+</style>
+
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-dark">
-	<a class="navbar-brand" href="#" onclick="redirect();">Pronote Agenda</a>
-	<ul class="navbar-nav mr-auto">
-		<a class="nav-link" href="#" onclick="UI_wrap('div-settings');">Paramètres</a>
-	</ul>
+	<a class="navbar-brand" href="#" onclick="redirect();">Pronote</a>
+	<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+			class="navbar-toggler"
+			data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<div class="logged-in">
+				<a class="nav-link text-white" href="#" onclick="UI_wrap('div-settings');">Devoirs</a>
+				<a class="nav-link text-white" href="#" onclick="UI_wrap('div-settings');">Absences</a>
+				<a class="nav-link text-white" href="#" onclick="UI_wrap('div-settings');">Notes</a>
+			</div>
+			<a class="nav-link" href="#" onclick="UI_wrap('div-settings');">Paramètres</a>
+		</ul>
+	</div>
 </nav>
 
 <br>
@@ -82,7 +108,7 @@
 	</div>
 	<div class="form-group">
 		<label for="password">Mot de passe</label>
-		<input class="form-control" id="password" placeholder="*******" type="password">
+		<input class="form-control" id="password" placeholder="***" type="password">
 		<small class="form-text text-muted">Votre mot de passe sera sauvegardé sur votre appareil.</small>
 	</div>
 
@@ -109,7 +135,8 @@
 
 	<div class="form-group">
 		<label for="pronoteurl">URL Pronote
-		<button class="btn btn-success" id="geo_localisation" onclick="refreshGeo();" hidden> Loc</button></label>
+			<button class="btn btn-success" hidden id="geo_localisation" onclick="refreshGeo();"> Loc</button>
+		</label>
 
 		<input aria-describedby="pronoteurlHelp" autocapitalize="off" autocomplete="off" autocorrect="off"
 			   class="form-control" id="pronoteurl" placeholder="http://0xxxxx.index-education.net/pronote/"
@@ -152,12 +179,14 @@
 	<div class="alert alert-danger" hidden id="settings-info" role="alert">
 		...
 	</div>
-	<div class="container bg-white shadow" hidden id="settings-logged">
-		<p>Mettre à jour votre emplois du temps et données Pronote</p>
-		<button class="btn btn-primary" onclick="refreshData();" type="button">Refresh pronote data</button>
-		<div hidden id="settings-update-spinner">
-			<div class="spinner-border text-primary" role="status">
-				<span class="sr-only">Loading...</span>
+	<div class="container bg-white shadow">
+		<div hidden id="settings-logged">
+			<p>Mettre à jour votre emplois du temps et données Pronote</p>
+			<button class="btn btn-primary" onclick="refreshData();" type="button">Refresh pronote data</button>
+			<div hidden id="settings-update-spinner">
+				<div class="spinner-border text-primary" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
 			</div>
 		</div>
 		<p>Supprimer les données en rapport avec votre compte Pronote (Reset de l'application)</p>
@@ -174,8 +203,7 @@
 	</div>
 </div>
 
-<!--script src="js/jquery-3.4.1.min.js"></script-->
-<!--script src="js/bootstrap.min.js"></script-->
+<script src="js/bootstrap-native-v4.min.js"></script>
 <script src="js/flatpickr.js"></script>
 <script src="js/index.js" type="text/javascript"></script>
 </body>

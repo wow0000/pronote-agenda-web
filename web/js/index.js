@@ -71,10 +71,9 @@ if ("geolocation" in navigator) {
 				const contentType = response.headers.get("content-type");
 				if (contentType && contentType.indexOf("application/json") !== -1) {
 					return response.json().then(function (json) {
-						let parsed_json = JSON.parse(json);
 						pronote_url.outerHTML = '<select class="form-control" id="pronoteurl"></select>'
 						let pronote_select = document.getElementById("pronoteurl");
-						parsed_json.forEach(function(e){
+						json.forEach(function (e) {
 							let opt = document.createElement("option");
 							opt.value = e.url;
 							opt.text = e.nomEtab;
@@ -88,7 +87,7 @@ if ("geolocation" in navigator) {
 			}).catch(function (err) {
 				info.hidden = false;
 				info.innerText = "Erreur de connexion au serveur, vérifiez votre connexion internet";
-				console.log(err);
+				console.error(err);
 			});
 		});
 	}
@@ -375,6 +374,7 @@ function redirect() {
 		pushCourses(new Date(new Date().setHours(0, 0, 0, 0)), JSON.parse(localStorage.getItem("data")));
 		document.getElementById("main-date").value = new Date(new Date().setHours(0, 0, 0, 0));
 		document.getElementById("settings-logged").hidden = false;
+		document.getElementsByClassName("")
 		//Show outdated popup if data isn't updated for more than 5 days
 		document.getElementById("main-outdated").hidden = !Boolean(new Date(localStorage.getItem("updateTime")) < new Date().fp_incr("-5d"));
 	}
