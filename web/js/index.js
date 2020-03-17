@@ -9,9 +9,10 @@ let translated_data = {
 	profile_pic: "Photo de profil",
 	menu: "Menu",
 	information: "Informations",
-	student: "Profil"
+	student: "Profil",
+	reports: "Bulletins"
 }
-let data_to_retrieve = ["timeplan", "absences", "marks", "homework", "profile_pic", "menu", "information", "student"];
+let data_to_retrieve = ["timeplan", "absences", "marks", "homework", "profile_pic", "menu", "information", "student", "reports"];
 let globalI = 0;
 
 function save_settings() {
