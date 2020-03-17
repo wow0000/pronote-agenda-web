@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "pronote-lib": "^2.1.3"
+    "pronote-lib": "^2.1.4"
   },
   "devDependencies": {}
 }
